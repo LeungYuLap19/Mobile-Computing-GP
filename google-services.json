@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "123664795403",
+    "project_id": "mobile-computing-gp",
+    "storage_bucket": "mobile-computing-gp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123664795403:android:eb6d817046cae9ee95440e",
+        "android_client_info": {
+          "package_name": "com.mobileComputing.groupProject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAur_ZQkc3jKUu6tN-oxJ_Pu5jUDKzX3oM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

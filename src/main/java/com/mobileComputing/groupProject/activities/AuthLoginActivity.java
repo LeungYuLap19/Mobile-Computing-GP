@@ -6,21 +6,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mobileComputing.groupProject.R;
 import com.mobileComputing.groupProject.models.User;
-import com.mobileComputing.groupProject.services.apis.AuthAPIs;
+import com.mobileComputing.groupProject.services.firebase.Auth;
+import com.mobileComputing.groupProject.services.interfaces.AuthCallBack;
 import com.mobileComputing.groupProject.states.AppStates;
-
-import org.json.JSONException;
-
-import java.io.IOException;
 
 public class AuthLoginActivity extends AppCompatActivity {
 
-    AuthAPIs authAPIs;
+    Auth firebaseAuth;
     AppStates appStates;
     EditText login_email_et, login_password_et;
     Button login_signin_btn;
@@ -31,7 +29,7 @@ public class AuthLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_login);
 
-        authAPIs = new AuthAPIs();
+        firebaseAuth = new Auth();
         appStates = (AppStates) getApplication();
         login_email_et = findViewById(R.id.login_email_et);
         login_password_et = findViewById(R.id.login_password_et);
@@ -41,18 +39,7 @@ public class AuthLoginActivity extends AppCompatActivity {
         login_signin_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    User user = loginAuthUser();
-                    appStates.setUser(user);
-
-                    Intent intent = new Intent(AuthLoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                loginAuthUser();
             }
         });
 
@@ -67,10 +54,25 @@ public class AuthLoginActivity extends AppCompatActivity {
 
     }
 
-    private User loginAuthUser() throws JSONException, IOException {
+    private void loginAuthUser() {
         String email = login_email_et.getText().toString();
         String password = login_password_et.getText().toString();
-        User user = authAPIs.authUser(email, password);
-        return user;
+
+        firebaseAuth.authUser(email, password, new AuthCallBack() {
+            @Override
+            public void onSuccess(User user) {
+                appStates.setUser(user);
+                Intent intent = new Intent(AuthLoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                login_email_et.setText("");
+                login_password_et.setText("");
+                Toast.makeText(AuthLoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

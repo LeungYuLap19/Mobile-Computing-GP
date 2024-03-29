@@ -12,13 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.mobileComputing.groupProject.R;
 import com.mobileComputing.groupProject.models.User;
-import com.mobileComputing.groupProject.services.firebase.Auth;
+import com.mobileComputing.groupProject.services.firebase.AuthService;
 import com.mobileComputing.groupProject.services.interfaces.AuthCallBack;
 import com.mobileComputing.groupProject.states.AppStates;
 
 public class AuthRegisterActivity extends AppCompatActivity {
 
-    Auth firebaseAuth;
+    AuthService firebaseAuthService;
     AppStates appStates;
     EditText register_username_et, register_email_et, register_password_et;
     Button register_signup_btn;
@@ -29,7 +29,7 @@ public class AuthRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_register);
 
-        firebaseAuth = new Auth();
+        firebaseAuthService = new AuthService(AuthRegisterActivity.this);
         appStates = (AppStates) getApplication();
         register_username_et = findViewById(R.id.register_username_et);
         register_email_et = findViewById(R.id.register_email_et);
@@ -59,7 +59,7 @@ public class AuthRegisterActivity extends AppCompatActivity {
         String email = register_email_et.getText().toString();
         String password = register_password_et.getText().toString();
 
-        firebaseAuth.newUser(username, email, password, new AuthCallBack() {
+        firebaseAuthService.newUser(username, email, password, new AuthCallBack() {
             @Override
             public void onSuccess(User user) {
                 appStates.setUser(user);

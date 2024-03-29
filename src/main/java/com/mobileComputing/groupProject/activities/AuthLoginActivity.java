@@ -12,13 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.mobileComputing.groupProject.R;
 import com.mobileComputing.groupProject.models.User;
-import com.mobileComputing.groupProject.services.firebase.Auth;
+import com.mobileComputing.groupProject.services.firebase.AuthService;
 import com.mobileComputing.groupProject.services.interfaces.AuthCallBack;
 import com.mobileComputing.groupProject.states.AppStates;
 
 public class AuthLoginActivity extends AppCompatActivity {
 
-    Auth firebaseAuth;
+    AuthService firebaseAuthService;
     AppStates appStates;
     EditText login_email_et, login_password_et;
     Button login_signin_btn;
@@ -29,7 +29,7 @@ public class AuthLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.auth_login);
 
-        firebaseAuth = new Auth();
+        firebaseAuthService = new AuthService(AuthLoginActivity.this);
         appStates = (AppStates) getApplication();
         login_email_et = findViewById(R.id.login_email_et);
         login_password_et = findViewById(R.id.login_password_et);
@@ -58,7 +58,7 @@ public class AuthLoginActivity extends AppCompatActivity {
         String email = login_email_et.getText().toString();
         String password = login_password_et.getText().toString();
 
-        firebaseAuth.authUser(email, password, new AuthCallBack() {
+        firebaseAuthService.authUser(email, password, new AuthCallBack() {
             @Override
             public void onSuccess(User user) {
                 appStates.setUser(user);

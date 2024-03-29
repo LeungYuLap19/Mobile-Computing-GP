@@ -63,7 +63,7 @@ public class AuthRegisterActivity extends AppCompatActivity {
             @Override
             public void onSuccess(User user) {
                 appStates.setUser(user);
-                Intent intent = new Intent(AuthRegisterActivity.this, MainActivity.class);
+                Intent intent = new Intent(AuthRegisterActivity.this, MainGroupsActivity.class);
                 startActivity(intent);
                 finish();
             }

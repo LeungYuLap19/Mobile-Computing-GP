@@ -33,8 +33,20 @@
             android:exported="true" />
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.MainGroupsActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".activities.MainCreateGroupActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".activities.MainUserProfileActivity"
+            android:exported="true" />
+
+<!--        <activity-->
+<!--            android:name=".activities.MainActivity"-->
+<!--            android:exported="true" />-->
     </application>
 
 </manifest>

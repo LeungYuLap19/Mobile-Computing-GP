@@ -39,8 +39,9 @@ public class Auth {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
+                        String docID = documentReference.getId();
                         Log.d("firebaseMsg", "DocumentSnapshot added with ID: " + documentReference.getId());
-                        User newUser = new User(username, email);
+                        User newUser = new User(docID, username, email);
                         authCallBack.onSuccess(newUser);
                     }
                 })
@@ -66,6 +67,7 @@ public class Auth {
                             if (querySnapshot != null && !querySnapshot.isEmpty()) {
                                 for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
                                     Map<String, Object> userMap = documentSnapshot.getData();
+                                    String docId = documentSnapshot.getId();
                                     String username = (String) userMap.get("username");
                                     String userEmail = (String) userMap.get("email");
 
@@ -73,7 +75,7 @@ public class Auth {
                                     String hashedPassword = (String) userMap.get("password");
                                     if (BCrypt.checkpw(password, hashedPassword)) {
                                         // Password matches
-                                        User user = new User(username, userEmail);
+                                        User user = new User(docId, username, userEmail);
                                         Log.d("firebaseMsg", "Found user");
                                         authCallBack.onSuccess(user);
                                         return;

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.button.MaterialButton;
 import com.mobileComputing.groupProject.R;
@@ -32,6 +33,7 @@ public class MainGroupsActivity extends AppCompatActivity{
     MaterialButton groups_add_btn;
     EditText groups_search_et;
     ListView groups_lv;
+    SwipeRefreshLayout swipe_refresh_layout;
     List<Group> groupList, loadedGroups;
     GroupsCustomListAdapter groupsCustomListAdapter;
 
@@ -46,6 +48,7 @@ public class MainGroupsActivity extends AppCompatActivity{
         groups_add_btn = findViewById(R.id.groups_add_btn);
         groups_search_et = findViewById(R.id.groups_search_et);
         groups_lv = findViewById(R.id.groups_lv);
+        swipe_refresh_layout = findViewById(R.id.swipe_refresh_layout);
 
         groupList = new ArrayList<>();
         loadedGroups = new ArrayList<>();
@@ -96,6 +99,14 @@ public class MainGroupsActivity extends AppCompatActivity{
             }
         });
 
+        swipe_refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchGroups();
+                swipe_refresh_layout.setRefreshing(false);
+            }
+        });
+
         fetchGroups();
     }
 
@@ -106,8 +117,7 @@ public class MainGroupsActivity extends AppCompatActivity{
             public void onSuccess(List<Group> groups) {
                 groupList.clear();
                 groupList.addAll(groups);
-                groupsCustomListAdapter = new GroupsCustomListAdapter(MainGroupsActivity.this, groupList);
-                groups_lv.setAdapter(groupsCustomListAdapter);
+                changeList(groupList);
             }
 
             @Override
@@ -129,7 +139,11 @@ public class MainGroupsActivity extends AppCompatActivity{
             }
         }
 
-        groupsCustomListAdapter = new GroupsCustomListAdapter(this, resultList);
+        changeList(resultList);
+    }
+
+    private void changeList(List<Group> list) {
+        groupsCustomListAdapter = new GroupsCustomListAdapter(this, list);
         groups_lv.setAdapter(groupsCustomListAdapter);
     }
 }

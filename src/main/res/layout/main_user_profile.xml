@@ -34,14 +34,14 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"/>
 
-            <TextView
-                android:id="@+id/save_profile_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Save"
-                android:textSize="20sp"
-                android:layout_gravity="bottom"
-                android:textColor="@color/text_regular"/>
+<!--            <TextView-->
+<!--                android:id="@+id/save_profile_btn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Save"-->
+<!--                android:textSize="20sp"-->
+<!--                android:layout_gravity="bottom"-->
+<!--                android:textColor="@color/text_regular"/>-->
 
         </LinearLayout>
 
@@ -58,9 +58,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:hint="Edit Username"
+            android:textColor="@color/text_regular"
             android:textAlignment="center"
             android:backgroundTint="@color/text_small"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp" />
 
         <EditText
             android:id="@+id/email_et"
@@ -68,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:hint="Edit Email"
+            android:textColor="@color/text_regular"
             android:textAlignment="center"
             android:backgroundTint="@color/text_small"
             android:layout_marginBottom="40dp"/>

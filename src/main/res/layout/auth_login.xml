@@ -42,7 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/text_small"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="20dp"
+            android:inputType="textEmailAddress"/>
 
         <TextView
             android:layout_width="wrap_content"

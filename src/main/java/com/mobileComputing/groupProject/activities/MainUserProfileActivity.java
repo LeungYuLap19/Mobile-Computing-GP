@@ -35,6 +35,8 @@ public class MainUserProfileActivity extends AppCompatActivity {
         User user = appStates.getUser();
         username_et.setText(user.getUsername());
         email_et.setText(user.getEmail());
+        username_et.setEnabled(false);
+        email_et.setEnabled(false);
 
         return_btn.setOnClickListener(new View.OnClickListener() {
             @Override

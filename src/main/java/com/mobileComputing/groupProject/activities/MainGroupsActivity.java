@@ -32,7 +32,7 @@ public class MainGroupsActivity extends AppCompatActivity{
     MaterialButton groups_add_btn;
     EditText groups_search_et;
     ListView groups_lv;
-    List<Group> groupList;
+    List<Group> groupList, loadedGroups;
     GroupsCustomListAdapter groupsCustomListAdapter;
 
     @Override
@@ -47,7 +47,8 @@ public class MainGroupsActivity extends AppCompatActivity{
         groups_search_et = findViewById(R.id.groups_search_et);
         groups_lv = findViewById(R.id.groups_lv);
 
-        groupList = new ArrayList<>(); // Initialize an empty list
+        groupList = new ArrayList<>();
+        loadedGroups = new ArrayList<>();
 
         groupsCustomListAdapter = new GroupsCustomListAdapter(this, groupList);
         groups_lv.setAdapter(groupsCustomListAdapter);
@@ -105,7 +106,8 @@ public class MainGroupsActivity extends AppCompatActivity{
             public void onSuccess(List<Group> groups) {
                 groupList.clear();
                 groupList.addAll(groups);
-                groupsCustomListAdapter.notifyDataSetChanged();
+                groupsCustomListAdapter = new GroupsCustomListAdapter(MainGroupsActivity.this, groupList);
+                groups_lv.setAdapter(groupsCustomListAdapter);
             }
 
             @Override

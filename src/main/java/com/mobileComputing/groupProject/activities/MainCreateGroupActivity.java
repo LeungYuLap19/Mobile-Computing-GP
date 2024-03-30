@@ -19,7 +19,7 @@ import com.mobileComputing.groupProject.adapters.MembersCustomListAdapter;
 import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.firebase.GroupService;
 import com.mobileComputing.groupProject.services.firebase.UserService;
-import com.mobileComputing.groupProject.services.interfaces.GroupCallBack;
+import com.mobileComputing.groupProject.services.interfaces.AddGroupCallBack;
 import com.mobileComputing.groupProject.services.interfaces.UserSearchCallback;
 import com.mobileComputing.groupProject.states.AppStates;
 
@@ -61,6 +61,8 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         searchResultAdapter = new MembersCustomListAdapter(this, searchResultUsers, existingUsers, searchResultUsers, true);
         members_lv.setAdapter(membersAdapter);
         username_search_lv.setAdapter(searchResultAdapter);
+        members_lv.setDivider(null);
+        username_search_lv.setDivider(null);
 
         return_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,14 +129,8 @@ public class MainCreateGroupActivity extends AppCompatActivity {
     private void createGroup() {
         String groupName = group_name_et.getText().toString();
 
-        // Get a list of all user IDs from existingUsers
-        List<String> memberUserIds = new ArrayList<>();
-        for (User user : existingUsers) {
-            memberUserIds.add(user.getUserid());
-        }
-
         // Add the group to the Firestore collection using the GroupService
-        groupService.addGroup(groupName, memberUserIds, appStates.getUser().getUserid(), new GroupCallBack() {
+        groupService.addGroup(groupName, existingUsers, appStates.getUser().getUserid(), new AddGroupCallBack() {
             @Override
             public void onSuccess(String groupName) {
                 Toast.makeText(MainCreateGroupActivity.this, groupName + " created", Toast.LENGTH_SHORT).show();

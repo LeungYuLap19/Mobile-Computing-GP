@@ -5,6 +5,7 @@ public class User {
     private String userid;
     private String email;
     private String username;
+    private boolean isAdmin;
 
     public User (String userid, String username, String email) {
         this.userid = userid;
@@ -20,5 +21,13 @@ public class User {
 
     public String getUsername() {
         return  username;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public boolean getIsAdmin() {
+        return isAdmin;
     }
 }

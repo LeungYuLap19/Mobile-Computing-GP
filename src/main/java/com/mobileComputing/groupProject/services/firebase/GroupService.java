@@ -92,7 +92,7 @@ public class GroupService {
                                 members.add(user);
 
                                 if (memberid.equals(userid)) {
-                                    Group group = new Group(groupname, members);
+                                    Group group = new Group(document.getId(), groupname, members);
                                     groups.add(group);
 
                                 }

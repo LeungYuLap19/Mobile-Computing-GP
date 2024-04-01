@@ -53,7 +53,7 @@ public class MainGroupsActivity extends AppCompatActivity{
         groupList = new ArrayList<>();
         loadedGroups = new ArrayList<>();
 
-        groupsCustomListAdapter = new GroupsCustomListAdapter(this, groupList);
+        groupsCustomListAdapter = new GroupsCustomListAdapter(this, groupList, appStates);
         groups_lv.setAdapter(groupsCustomListAdapter);
         groups_lv.setDivider(null);
 
@@ -77,14 +77,10 @@ public class MainGroupsActivity extends AppCompatActivity{
 
         groups_search_et.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -143,7 +139,8 @@ public class MainGroupsActivity extends AppCompatActivity{
     }
 
     private void changeList(List<Group> list) {
-        groupsCustomListAdapter = new GroupsCustomListAdapter(this, list);
+        groupsCustomListAdapter = new GroupsCustomListAdapter(this, list, appStates);
         groups_lv.setAdapter(groupsCustomListAdapter);
     }
+
 }

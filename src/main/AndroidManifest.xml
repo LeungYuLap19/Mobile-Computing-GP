@@ -44,6 +44,14 @@
             android:name=".activities.MainUserProfileActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".activities.MainGroupTasksActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".activities.MainCreateTaskActivity"
+            android:exported="true" />
+
 <!--        <activity-->
 <!--            android:name=".activities.MainActivity"-->
 <!--            android:exported="true" />-->

@@ -8,4 +8,5 @@
     <color name="text_small">#8D99AE</color>
     <color name="text_highlight">#EF233C</color>
     <color name="transparent">#00000000</color>
+    <color name="half_background">#BFEDF2F4</color>
 </resources>

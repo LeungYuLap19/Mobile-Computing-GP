@@ -69,9 +69,16 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         return_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainCreateGroupActivity.this, MainGroupsActivity.class);
-                startActivity(intent);
-                finish();
+                if (appStates.getGroup() == null) {
+                    Intent intent = new Intent(MainCreateGroupActivity.this, MainGroupsActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    Intent intent = new Intent(MainCreateGroupActivity.this, MainGroupTasksActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 

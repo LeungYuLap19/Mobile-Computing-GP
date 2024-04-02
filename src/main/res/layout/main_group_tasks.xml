@@ -76,38 +76,52 @@
 
         </LinearLayout>
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:layout_marginBottom="20dp">
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/task_date_list"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-<!--                <android.widget.Button-->
-<!--                    android:layout_width="80dp"-->
-<!--                    android:layout_height="90dp"-->
-<!--                    android:background="@drawable/layout_login_btn_bg"-->
-<!--                    android:text="Today"-->
-<!--                    android:textColor="@color/background"/>-->
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:layout_marginBottom="20dp">
 
+                    <LinearLayout
+                        android:id="@+id/task_date_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!--                <android.widget.Button-->
+                        <!--                    android:layout_width="80dp"-->
+                        <!--                    android:layout_height="90dp"-->
+                        <!--                    android:background="@drawable/layout_login_btn_bg"-->
+                        <!--                    android:text="Today"-->
+                        <!--                    android:textColor="@color/background"/>-->
+
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+                <ListView
+                    android:id="@+id/task_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    tools:listitem="@layout/task_listview_item">
+
+                </ListView>
 
             </LinearLayout>
 
-        </HorizontalScrollView>
-
-        <ListView
-            android:id="@+id/task_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            tools:listitem="@layout/task_listview_item">
-
-        </ListView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

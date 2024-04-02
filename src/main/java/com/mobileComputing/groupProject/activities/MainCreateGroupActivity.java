@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.mobileComputing.groupProject.R;
 import com.mobileComputing.groupProject.adapters.MembersCustomListAdapter;
+import com.mobileComputing.groupProject.models.Group;
 import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.firebase.GroupService;
 import com.mobileComputing.groupProject.services.firebase.UserService;
@@ -33,7 +34,7 @@ public class MainCreateGroupActivity extends AppCompatActivity {
     AppStates appStates;
     List<User> existingUsers, searchResultUsers;
     ImageButton return_btn;
-    TextView create_group_btn;
+    TextView create_group_btn, group_name;
     EditText group_name_et, username_search_et;
     ListView members_lv, username_search_lv;
     MembersCustomListAdapter membersAdapter, searchResultAdapter;
@@ -56,6 +57,7 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         username_search_et = findViewById(R.id.username_search_et);
         members_lv = findViewById(R.id.members_lv);
         username_search_lv = findViewById(R.id.username_search_lv);
+        group_name = findViewById(R.id.group_name);
 
         membersAdapter = new MembersCustomListAdapter(this, existingUsers, existingUsers, searchResultUsers, false);
         searchResultAdapter = new MembersCustomListAdapter(this, searchResultUsers, existingUsers, searchResultUsers, true);
@@ -76,7 +78,12 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         create_group_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createGroup();
+                if (appStates.getGroup() == null) {
+                    createGroup();
+                }
+                else {
+                    modifyGroup();
+                }
             }
         });
 
@@ -102,6 +109,8 @@ public class MainCreateGroupActivity extends AppCompatActivity {
 
             }
         });
+
+        checkCurrentGroup();
     }
 
     private void searchUsers(String searchText) {
@@ -144,6 +153,42 @@ public class MainCreateGroupActivity extends AppCompatActivity {
                 Toast.makeText(MainCreateGroupActivity.this, groupName + " failed to create", Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    private void modifyGroup() {
+        String groupName = group_name_et.getText().toString();
+
+        Group group = new Group(appStates.getGroup().getGroupid(), groupName, existingUsers);
+
+        groupService.saveGroupById(group.getGroupid(), group, new AddGroupCallBack() {
+            @Override
+            public void onSuccess(String groupName) {
+                appStates.setGroup(group);
+                Toast.makeText(MainCreateGroupActivity.this, groupName + " saved", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainCreateGroupActivity.this, MainGroupTasksActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+    }
+
+    private void checkCurrentGroup() {
+        Group currentGroup = appStates.getGroup();
+
+        if (currentGroup != null) {
+            group_name.setText(currentGroup.getGroupname());
+            group_name_et.setText(currentGroup.getGroupname());
+            create_group_btn.setText("Save");
+            List<User> members = currentGroup.getMembers();
+            existingUsers.clear();
+            for (User member : members) {
+                existingUsers.add(member);
+            }
+        }
     }
 }

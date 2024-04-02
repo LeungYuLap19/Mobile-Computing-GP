@@ -198,11 +198,24 @@
 
             </LinearLayout>
 
+            <android.widget.Button
+                android:id="@+id/delete_task_btn"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:background="@drawable/layout_register_btn_bg"
+                android:text="Delete Task"
+                android:textAllCaps="false"
+                android:layout_marginTop="30dp"
+                android:visibility="gone">
+
+            </android.widget.Button>
+
         </LinearLayout>
 
     </LinearLayout>
 
     <TextView
+        android:id="@+id/task_page_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="New Task"

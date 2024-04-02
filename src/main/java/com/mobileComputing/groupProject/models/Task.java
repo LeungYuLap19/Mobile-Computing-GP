@@ -11,6 +11,7 @@ public class Task {
     private String time;
     private String assignMember;
     private String priority;
+    private boolean done;
 
     public Task (String groupid, String title, String notes, String location
     , String date, String time, String assignMember, String priority) {
@@ -23,6 +24,7 @@ public class Task {
         this.time = time;
         this.assignMember = assignMember;
         this.priority = priority;
+        this.done = false;
     }
 
     public void setTaskid(String taskid) {
@@ -64,4 +66,10 @@ public class Task {
     public String getPriority() {
         return priority;
     }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
+    public boolean getDone() { return done; }
 }

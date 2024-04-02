@@ -1,6 +1,12 @@
 package com.mobileComputing.groupProject.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,21 +15,35 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.mobileComputing.groupProject.R;
+import com.mobileComputing.groupProject.activities.MainCreateTaskActivity;
 import com.mobileComputing.groupProject.models.Task;
+import com.mobileComputing.groupProject.services.firebase.TaskService;
+import com.mobileComputing.groupProject.services.interfaces.AddTaskCallBack;
+import com.mobileComputing.groupProject.states.AppStates;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 public class TasksCustomListAdapter extends ArrayAdapter<Task> {
 
+    TaskService taskService;
     private Context context;
     private List<Task> tasksList;
+    private AppStates appStates;
 
-    public TasksCustomListAdapter(Context context, List<Task> tasksList) {
+    public TasksCustomListAdapter(Context context, List<Task> tasksList, AppStates appStates) {
         super(context, 0, tasksList);
+        this.taskService = new TaskService();
         this.context = context;
         this.tasksList = tasksList;
+        this.appStates = appStates;
     }
 
     @Override
@@ -36,7 +56,6 @@ public class TasksCustomListAdapter extends ArrayAdapter<Task> {
             viewHolder = new ViewHolder();
             viewHolder.task_item = convertView.findViewById(R.id.task_item);
             viewHolder.finish_btn = convertView.findViewById(R.id.finish_btn);
-            viewHolder.finish_btn_empty = convertView.findViewById(R.id.finish_btn_empty);
             viewHolder.task_name = convertView.findViewById(R.id.task_name);
             viewHolder.task_time = convertView.findViewById(R.id.task_time);
             viewHolder.member_assign = convertView.findViewById(R.id.member_assign);
@@ -47,27 +66,91 @@ public class TasksCustomListAdapter extends ArrayAdapter<Task> {
         }
 
         Task task = tasksList.get(position);
+
+        String priorityEmoji = "";
         if (task.getPriority().equals("Low")) {
-            viewHolder.task_name.setText("\u2757" + task.getTitle());
+            priorityEmoji = "\u2757 ";
+        } else if (task.getPriority().equals("Medium")) {
+            priorityEmoji = "\u2757\u2757 ";
+        } else if (task.getPriority().equals("High")) {
+            priorityEmoji = "\u2757\u2757\u2757 ";
         }
-        if (task.getPriority().equals("Medium")) {
-            viewHolder.task_name.setText("\u2757\u2757" + task.getTitle());
-        }
-        if (task.getPriority().equals("High")) {
-            viewHolder.task_name.setText("\u2757\u2757\u2757" + task.getTitle());
-        }
-        else {
-            viewHolder.task_name.setText(task.getTitle());
-        }
+
+        String taskTitle = task.getTitle();
+        String fullTitle = priorityEmoji + taskTitle;
+
+        SpannableString spannableString = new SpannableString(fullTitle);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, priorityEmoji.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        viewHolder.task_name.setText(spannableString);
         viewHolder.task_time.setText("At " + task.getTime());
         viewHolder.member_assign.setText(task.getAssignMember());
+
+        if (task.getDone()) {
+            viewHolder.task_name.setTextColor(ContextCompat.getColor(context, R.color.text_small));
+            viewHolder.task_time.setTextColor(ContextCompat.getColor(context, R.color.text_small));
+            viewHolder.finish_btn.setBackgroundResource(R.drawable.layout_task_done_btn_bg);
+        } else if (!task.getDone()) {
+            viewHolder.finish_btn.setBackgroundResource(R.drawable.layout_task_btn_bg);
+            if(overtime(task.getTime(), task.getDate())) {
+                viewHolder.task_time.setTextColor(ContextCompat.getColor(context, R.color.text_highlight));
+            }
+            viewHolder.task_name.setTextColor(ContextCompat.getColor(context, R.color.text_regular));
+        }
+
+        viewHolder.finish_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Debug", String.valueOf(task.getDone()));
+                setTaskdone(task.getTaskid(), !task.getDone());
+                task.setDone(!task.getDone());
+                notifyDataSetChanged();
+            }
+        });
+
+        viewHolder.task_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                appStates.setTask(task);
+                Intent intent = new Intent(context, MainCreateTaskActivity.class);
+                context.startActivities(new Intent[]{intent});
+                ((Activity) context).finish();
+            }
+        });
 
         return convertView;
     }
 
     private static class ViewHolder {
         LinearLayout task_item, finish_btn;
-        View finish_btn_empty;
         TextView task_name, task_time, member_assign;
+    }
+
+    private boolean overtime(String time, String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
+        String currentDateTime = sdf.format(new Date());
+
+        try {
+            Date taskDateTime = sdf.parse(date + " " + time);
+            Date currentDateTimeObj = sdf.parse(currentDateTime);
+
+            return currentDateTimeObj.compareTo(taskDateTime) > 0;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private void setTaskdone(String taskid, boolean taskState) {
+        taskService.setTaskDone(taskid, taskState, new AddTaskCallBack() {
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+            }
+        });
     }
 }

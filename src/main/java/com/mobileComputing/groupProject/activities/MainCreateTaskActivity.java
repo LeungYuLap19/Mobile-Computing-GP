@@ -2,8 +2,10 @@ package com.mobileComputing.groupProject.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,12 +36,16 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
     AppStates appStates;
     Group currentGroup;
     ImageButton return_btn;
-    TextView create_task_btn, select_date, select_time;
+    TextView create_task_btn, select_date, select_time, task_page_title;
     EditText title_et, notes_et, location_et;
     Spinner members_spinner, priority_spinner;
     LinearLayout date_picker_bg, time_picker_bg;
     DatePicker date_picker;
     TimePicker time_picker;
+    Button delete_task_btn;
+
+    String nameList[];
+    final String priorityList[] = {"None", "Low", "Medium", "High"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +56,18 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         appStates = (AppStates) getApplication();
         currentGroup = appStates.getGroup();
         List<User> members = currentGroup.getMembers();
-        final String nameList[] = new String[members.size() + 2];
+        nameList = new String[members.size() + 2];
         nameList[0] = "None";
         nameList[1] = "All";
         for (int i = 0; i < members.size(); i++) {
             nameList[i + 2] = members.get(i).getUsername();
         }
-        final String priorityList[] = {"None", "Low", "Medium", "High"};
 
         return_btn = findViewById(R.id.return_btn);
         create_task_btn = findViewById(R.id.create_task_btn);
         select_date = findViewById(R.id.select_date);
         select_time = findViewById(R.id.select_time);
+        task_page_title = findViewById(R.id.task_page_title);
         title_et = findViewById(R.id.title_et);
         notes_et = findViewById(R.id.notes_et);
         location_et = findViewById(R.id.location_et);
@@ -71,6 +77,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         time_picker_bg = findViewById(R.id.time_picker_bg);
         date_picker = findViewById(R.id.date_picker);
         time_picker = findViewById(R.id.time_picker);
+        delete_task_btn = findViewById(R.id.delete_task_btn);
 
         ArrayAdapter<String> members_adapter = new ArrayAdapter<>(this, R.layout.spinner_text, nameList);
         ArrayAdapter<String> priority_adapter = new ArrayAdapter<>(this, R.layout.spinner_text, priorityList);
@@ -80,6 +87,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         return_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                appStates.setTask(null);
                 Intent intent = new Intent(MainCreateTaskActivity.this, MainGroupTasksActivity.class);
                 startActivity(intent);
                 finish();
@@ -89,21 +97,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         create_task_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = title_et.getText().toString();
-                String notes = notes_et.getText().toString();
-                String location = location_et.getText().toString();
-
-                String date = select_date.getText().toString();
-                String time = select_time.getText().toString();
-
-                String assignMember = members_spinner.getSelectedItem().toString();
-                String priority = priority_spinner.getSelectedItem().toString();
-
-                if (checkValidTask(title, date, time)) {
-                    // call function to add task to database
-                    Task task = new Task(currentGroup.getGroupid(), title, notes, location, date, time, assignMember, priority);
-                    createTask(task);
-                }
+                taskActions("create");
             }
         });
 
@@ -159,6 +153,33 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
                 select_time.setText(time);
             }
         });
+
+        checkTaskDetail();
+    }
+
+    private void taskActions(String action) {
+        String title = title_et.getText().toString();
+        String notes = notes_et.getText().toString();
+        String location = location_et.getText().toString();
+
+        String date = select_date.getText().toString();
+        String time = select_time.getText().toString();
+
+        String assignMember = members_spinner.getSelectedItem().toString();
+        String priority = priority_spinner.getSelectedItem().toString();
+
+        if (checkValidTask(title, date, time)) {
+            // call function to add task to database
+            Task task = new Task(currentGroup.getGroupid(), title, notes, location, date, time, assignMember, priority);
+
+            if (action.equals("create")) {
+                createTask(task);
+            }
+            else {
+                task.setTaskid(appStates.getTask().getTaskid());
+                modifyTask(task);
+            }
+        }
     }
 
     private String DateFormat(int year, int month, int day) {
@@ -190,6 +211,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         taskService.addTask(task, new AddTaskCallBack() {
             @Override
             public void onSuccess() {
+                appStates.setTask(null);
                 Toast.makeText(MainCreateTaskActivity.this, "Task Created", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainCreateTaskActivity.this, MainGroupTasksActivity.class);
                 startActivity(intent);
@@ -202,4 +224,82 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
             }
         });
     }
+
+    private void modifyTask(Task task) {
+        taskService.saveTaskByTaskId(task.getTaskid(), task, new AddTaskCallBack() {
+            @Override
+            public void onSuccess() {
+                appStates.setTask(null);
+                Toast.makeText(MainCreateTaskActivity.this, "Task Saved", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainCreateTaskActivity.this, MainGroupTasksActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.d("Debug", "failed to save task");
+            }
+        });
+    }
+
+    private void checkTaskDetail() {
+        Task task = appStates.getTask();
+
+        if (task != null) {
+            delete_task_btn.setVisibility(View.VISIBLE);
+            delete_task_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteTask();
+                }
+            });
+            task_page_title.setText(task.getTitle());
+            create_task_btn.setText("Save");
+            create_task_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    taskActions("save");
+                }
+            });
+            title_et.setText(task.getTitle());
+            notes_et.setText(task.getNotes());
+            location_et.setText(task.getLocation());
+            select_date.setText(task.getDate());
+            select_time.setText(task.getTime());
+            for (int i = 0; i < nameList.length; i++) {
+                if (nameList[i].equals(task.getAssignMember())) {
+                    members_spinner.setSelection(i);
+                    break;
+                }
+            }
+            for (int i = 0; i < priorityList.length; i++) {
+                if (priorityList[i].equals(task.getPriority())) {
+                    priority_spinner.setSelection(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void deleteTask() {
+        String taskid = appStates.getTask().getTaskid();
+        String taskname = appStates.getTask().getTitle();
+
+        taskService.deleteTaskById(taskid, new AddTaskCallBack() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(MainCreateTaskActivity.this, taskname + "deleted", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainCreateTaskActivity.this, MainGroupTasksActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+    }
+
 }

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class TaskService {
 
@@ -36,7 +37,7 @@ public class TaskService {
     }
 
     public void addTask(Task task, AddTaskCallBack callBack) {
-        Map<String, String> taskData = new HashMap<>();
+        Map<String, Object> taskData = new HashMap<>();
         taskData.put("groupid", task.getGroupid());
         taskData.put("title", task.getTitle());
         taskData.put("notes", task.getNotes());
@@ -45,6 +46,7 @@ public class TaskService {
         taskData.put("time", task.getTime());
         taskData.put("assignMember", task.getAssignMember());
         taskData.put("priority", task.getPriority());
+        taskData.put("done", task.getDone());
 
         tasksCollection.add(taskData)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -90,6 +92,7 @@ public class TaskService {
                             String time = documentSnapshot.getString("time");
                             String assignMember = documentSnapshot.getString("assignMember");
                             String priority = documentSnapshot.getString("priority");
+                            boolean done = documentSnapshot.getBoolean("done");
 
                             // Convert the dateString to Date object
                             Date date = null;
@@ -110,7 +113,7 @@ public class TaskService {
                                 if (!taskDate.before(today)) {
                                     Task task = new Task(groupid, title, notes, location, dateString, time, assignMember, priority);
                                     task.setTaskid(taskid);
-
+                                    task.setDone(done);
                                     String taskDay = dateFormat.format(taskDate.getTime());
 
                                     List<Task> tasks = tasksByDate.get(taskDay);
@@ -125,6 +128,75 @@ public class TaskService {
                         }
 
                         callBack.onSuccess(tasksByDate);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callBack.onFailure(e);
+                    }
+                });
+    }
+
+    public void setTaskDone(String taskId, boolean value, AddTaskCallBack callBack) {
+        DocumentReference taskRef = tasksCollection.document(taskId);
+        taskRef.update("done", value)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Debug", "set value " + value);
+                        callBack.onSuccess();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callBack.onFailure(e);
+                    }
+                });
+    }
+
+    public void saveTaskByTaskId(String taskId, Task task, AddTaskCallBack callBack) {
+        DocumentReference taskRef = tasksCollection.document(taskId);
+        Map<String, Object> taskData = new HashMap<>();
+        taskData.put("groupid", task.getGroupid());
+        taskData.put("title", task.getTitle());
+        taskData.put("notes", task.getNotes());
+        taskData.put("location", task.getLocation());
+        taskData.put("date", task.getDate());
+        taskData.put("time", task.getTime());
+        taskData.put("assignMember", task.getAssignMember());
+        taskData.put("priority", task.getPriority());
+        taskData.put("done", task.getDone());
+
+        taskRef.set(taskData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        if (taskId != null) {
+                            Log.d("Debug", "success");
+                        } else {
+                            Log.d("Debug", "taskId is null");
+                        }
+                        callBack.onSuccess();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Debug", "failed");
+                        callBack.onFailure(e);
+                    }
+                });
+    }
+
+    public void deleteTaskById(String taskId, AddTaskCallBack callBack) {
+        DocumentReference taskRef = tasksCollection.document(taskId);
+        taskRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callBack.onSuccess();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

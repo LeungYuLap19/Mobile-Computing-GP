@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -105,6 +106,45 @@ public class GroupService {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         callBack.onFailure(e);
+                    }
+                });
+    }
+
+    public void saveGroupById(String groupId, Group updatedGroup, AddGroupCallBack callback) {
+        DocumentReference groupRef = groupsCollection.document(groupId);
+
+        // Create a map to represent the updated group data
+        Map<String, Object> updatedGroupData = new HashMap<>();
+        updatedGroupData.put("groupname", updatedGroup.getGroupname());
+
+        // Create a list of member maps
+        List<Map<String, Object>> memberList = new ArrayList<>();
+        for (User user : updatedGroup.getMembers()) {
+            String memberId = user.getUserid();
+            String username = user.getUsername();
+
+            Map<String, Object> memberMap = new HashMap<>();
+            memberMap.put("userid", memberId);
+            memberMap.put("username", username);
+            memberMap.put("admin", user.getIsAdmin());
+
+            memberList.add(memberMap);
+        }
+
+        // Add the member list to the updatedGroupData map
+        updatedGroupData.put("members", memberList);
+
+        groupRef.set(updatedGroupData, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        callback.onSuccess(updatedGroup.getGroupname());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.onFailure(e);
                     }
                 });
     }

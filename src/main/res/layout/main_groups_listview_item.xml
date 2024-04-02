@@ -30,6 +30,7 @@
             android:textColor="@color/text_regular"/>
 
         <TextView
+            android:id="@+id/tasks_today"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Number of Tasks Today"

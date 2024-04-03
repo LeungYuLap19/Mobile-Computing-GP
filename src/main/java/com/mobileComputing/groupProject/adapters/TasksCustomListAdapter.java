@@ -118,6 +118,14 @@ public class TasksCustomListAdapter extends ArrayAdapter<Task> {
             }
         });
 
+        if (task.getAssignMember().equals("None") || task.getAssignMember().equals("All") || task.getAssignMember().equals(appStates.getUser().getUsername())) {
+            Log.d("Debug", task.getAssignMember());
+            viewHolder.finish_btn.setVisibility(View.VISIBLE);
+        }
+        else {
+            viewHolder.finish_btn.setVisibility(View.INVISIBLE);
+        }
+
         return convertView;
     }
 

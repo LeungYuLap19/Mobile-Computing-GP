@@ -282,7 +282,7 @@ public class MainGroupTasksActivity extends AppCompatActivity {
             List<Task> tasks = tasksList.get(key);
             List<Task> emptyTasks = new ArrayList<>();
             for (Task task : tasks) {
-                if (task.getAssignMember().equals(currentUsername)) {
+                if (task.getAssignMember().equals(currentUsername) || task.getAssignMember().equals("All")) {
                     emptyTasks.add(task);
                     keySet.add(key);
                 }

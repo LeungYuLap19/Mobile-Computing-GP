@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ChatActivity">
+
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:background="@color/background"
+       android:padding="10dp"
+       android:id="@+id/chattoolbar">
+
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="group name"
+           android:textColor="@color/text_regular"
+           android:textSize="22sp"
+           android:textStyle="bold"
+           android:layout_marginStart="20dp"
+           android:layout_toRightOf="@id/return_btn"/>
+
+       <ImageButton
+           android:id="@+id/return_btn"
+           android:layout_width="30dp"
+           android:layout_height="30dp"
+           android:padding="0dp"
+           android:layout_gravity="center_vertical"
+           android:scaleType="centerCrop"
+           android:backgroundTint="@color/transparent"
+           android:src="@drawable/return_btn"
+           android:contentDescription="return_btn" />
+
+   </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/chattoolbar"
+        android:layout_above="@id/bottom_layout"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:padding="8dp"
+        android:id="@+id/bottom_layout">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write message here"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/edit_rounded_textbox"
+            android:elevation="4dp"
+            android:padding="10dp"
+            android:layout_toLeftOf="@id/send_btn"/>
+
+        <ImageButton
+            android:id="@+id/send_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            android:backgroundTint="@color/transparent"
+            android:contentDescription="send_btn"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/send"
+            android:layout_marginStart="10dp"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

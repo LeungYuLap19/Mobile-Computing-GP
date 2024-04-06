@@ -115,7 +115,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scrollbars="none"
-                    tools:listitem="@layout/task_listview_item">
+                    tools:listitem="@layout/task_listview_item"
+                    android:dividerHeight="8dp">
 
                 </ListView>
 

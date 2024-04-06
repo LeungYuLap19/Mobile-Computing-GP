@@ -54,7 +54,7 @@
         android:textSize="18sp"
         android:textColor="@color/text_small"
         android:gravity="center"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="20dp"/>
 
     <View
         android:id="@+id/category_color"

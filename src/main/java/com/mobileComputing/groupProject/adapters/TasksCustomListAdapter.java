@@ -3,9 +3,15 @@ package com.mobileComputing.groupProject.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +65,7 @@ public class TasksCustomListAdapter extends ArrayAdapter<Task> {
             viewHolder.task_name = convertView.findViewById(R.id.task_name);
             viewHolder.task_time = convertView.findViewById(R.id.task_time);
             viewHolder.member_assign = convertView.findViewById(R.id.member_assign);
+            viewHolder.category_color = convertView.findViewById(R.id.category_color);
 
             convertView.setTag(viewHolder);
         } else {
@@ -67,20 +74,21 @@ public class TasksCustomListAdapter extends ArrayAdapter<Task> {
 
         Task task = tasksList.get(position);
 
-        String priorityEmoji = "";
+        String prioritySign = "";
+        int priorityColor = ContextCompat.getColor(context, R.color.text_highlight);
         if (task.getPriority().equals("Low")) {
-            priorityEmoji = "\u2757 ";
+            prioritySign = "! ";
         } else if (task.getPriority().equals("Medium")) {
-            priorityEmoji = "\u2757\u2757 ";
+            prioritySign = "! ! ";
         } else if (task.getPriority().equals("High")) {
-            priorityEmoji = "\u2757\u2757\u2757 ";
+            prioritySign = "! ! ! ";
         }
 
         String taskTitle = task.getTitle();
-        String fullTitle = priorityEmoji + taskTitle;
+        String fullTitle = prioritySign + taskTitle;
 
         SpannableString spannableString = new SpannableString(fullTitle);
-        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, priorityEmoji.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(priorityColor), 0, prioritySign.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         viewHolder.task_name.setText(spannableString);
         viewHolder.task_time.setText("At " + task.getTime());
@@ -126,12 +134,15 @@ public class TasksCustomListAdapter extends ArrayAdapter<Task> {
             viewHolder.finish_btn.setVisibility(View.INVISIBLE);
         }
 
+        viewHolder.category_color.setBackgroundColor(task.getCategory().getHexCode());
+
         return convertView;
     }
 
     private static class ViewHolder {
         LinearLayout task_item, finish_btn;
         TextView task_name, task_time, member_assign;
+        View category_color;
     }
 
     private boolean overtime(String time, String date) {

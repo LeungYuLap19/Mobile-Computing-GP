@@ -9,12 +9,15 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.mobileComputing.groupProject.models.Category;
 import com.mobileComputing.groupProject.models.Group;
 import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.interfaces.AddGroupCallBack;
+import com.mobileComputing.groupProject.services.interfaces.AddTaskCallBack;
 import com.mobileComputing.groupProject.services.interfaces.GetGroupsCallBack;
 import com.mobileComputing.groupProject.states.AppStates;
 
@@ -81,7 +84,9 @@ public class GroupService {
                         for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
                             String groupname = document.getString("groupname");
                             List<Map<String, Object>> memberList = (List<Map<String, Object>>) document.get("members");
+                            List<Map<String, Object>> categoryList = (List<Map<String, Object>>) document.get("categories");
                             List<User> members = new ArrayList<>();
+                            List<Category> categories = new ArrayList<>();
 
                             for (Map<String, Object> memberMap : memberList) {
                                 String memberid = (String) memberMap.get("userid");
@@ -97,6 +102,22 @@ public class GroupService {
                                     groups.add(group);
 
                                 }
+                            }
+
+                            if (categoryList != null) {
+                                for (Map<String, Object> categoryMap : categoryList) {
+                                    String categoryName = (String) categoryMap.get("categoryName");
+                                    long hexCodeLong = (long) categoryMap.get("hexCode");
+                                    int hexCode = (int) hexCodeLong;
+                                    Category category = new Category(categoryName, hexCode);
+                                    categories.add(category);
+                                }
+                            }
+
+                            // Set category list for the group
+                            if (!groups.isEmpty()) {
+                                Group lastGroup = groups.get(groups.size() - 1);
+                                lastGroup.setCategoryList(categories);
                             }
                         }
                         callBack.onSuccess(groups);
@@ -147,5 +168,58 @@ public class GroupService {
                         callback.onFailure(e);
                     }
                 });
+    }
+
+    public void addCategoryToGroup(String groupId, Category category, AddTaskCallBack callback) {
+        DocumentReference groupRef = groupsCollection.document(groupId);
+
+        groupRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                List<Map<String, Object>> categoryList = (List<Map<String, Object>>) documentSnapshot.get("categories");
+
+                if (categoryList == null) {
+                    // Create a new category list if it doesn't exist in the document
+                    categoryList = new ArrayList<>();
+                }
+
+                boolean exist = false;
+                for (Map<String, Object> categoryMap : categoryList) {
+                    long hexCodeLong = (long) categoryMap.get("hexCode");
+                    int hexCode = (int) hexCodeLong;
+                    if (hexCode == category.getHexCode()) {
+                        categoryMap.put("categoryName", category.getCategoryName());
+                        exist = true;
+                        break;
+                    }
+                }
+
+                if (!exist) {
+                    Map<String, Object> categoryData = new HashMap<>();
+                    categoryData.put("categoryName", category.getCategoryName());
+                    categoryData.put("hexCode", category.getHexCode());
+                    categoryList.add(categoryData);
+                }
+
+                groupRef.update("categories", categoryList)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                callback.onSuccess();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                callback.onFailure(e);
+                            }
+                        });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                callback.onFailure(e);
+            }
+        });
     }
 }

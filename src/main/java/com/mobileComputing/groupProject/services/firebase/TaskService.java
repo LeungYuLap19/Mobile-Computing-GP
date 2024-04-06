@@ -11,6 +11,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.mobileComputing.groupProject.models.Category;
 import com.mobileComputing.groupProject.models.Task;
 import com.mobileComputing.groupProject.services.interfaces.AddTaskCallBack;
 import com.mobileComputing.groupProject.services.interfaces.GetTasksCallBack;
@@ -47,6 +48,7 @@ public class TaskService {
         taskData.put("assignMember", task.getAssignMember());
         taskData.put("priority", task.getPriority());
         taskData.put("done", task.getDone());
+        taskData.put("category", task.getCategory());
 
         tasksCollection.add(taskData)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -94,6 +96,13 @@ public class TaskService {
                             String priority = documentSnapshot.getString("priority");
                             boolean done = documentSnapshot.getBoolean("done");
 
+                            // get Category Date
+                            Map<String, Object> categoryData = (Map<String, Object>) documentSnapshot.get("category");
+                            String categoryName = (String) categoryData.get("categoryName");
+                            long hexCodeLong = (long) categoryData.get("hexCode");
+                            int hexCode = (int) hexCodeLong;
+                            Category category = new Category(categoryName, hexCode);
+
                             // Convert the dateString to Date object
                             Date date = null;
                             try {
@@ -111,7 +120,7 @@ public class TaskService {
                                 taskDate.set(Calendar.MILLISECOND, 0);
 
                                 if (!taskDate.before(today)) {
-                                    Task task = new Task(groupid, title, notes, location, dateString, time, assignMember, priority);
+                                    Task task = new Task(groupid, title, notes, location, dateString, time, assignMember, priority, category);
                                     task.setTaskid(taskid);
                                     task.setDone(done);
                                     String taskDay = dateFormat.format(taskDate.getTime());
@@ -168,6 +177,7 @@ public class TaskService {
         taskData.put("assignMember", task.getAssignMember());
         taskData.put("priority", task.getPriority());
         taskData.put("done", task.getDone());
+        taskData.put("category", task.getCategory());
 
         taskRef.set(taskData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

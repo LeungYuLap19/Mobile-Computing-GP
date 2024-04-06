@@ -9,4 +9,16 @@
     <color name="text_highlight">#EF233C</color>
     <color name="transparent">#00000000</color>
     <color name="half_background">#BFEDF2F4</color>
+    
+    <!--  Color Picker Options  -->
+    <color name="colorPicker1">#F94144</color>
+    <color name="colorPicker2">#E85D04</color>
+    <color name="colorPicker3">#6F4518</color>
+    <color name="colorPicker4">#184E77</color>
+    <color name="colorPicker5">#036666</color>
+    <color name="colorPicker6">#457b9d</color>
+    <color name="colorPicker7">#fca311</color>
+    <color name="colorPicker8">#fb6f92</color>
+    <color name="colorPicker9">#a7c957</color>
+    <color name="colorPicker10">#5e60ce</color>
 </resources>

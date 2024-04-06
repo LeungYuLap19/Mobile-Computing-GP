@@ -12,9 +12,10 @@ public class Task {
     private String assignMember;
     private String priority;
     private boolean done;
+    private Category category;
 
     public Task (String groupid, String title, String notes, String location
-    , String date, String time, String assignMember, String priority) {
+    , String date, String time, String assignMember, String priority, Category category) {
         this.taskid = null;
         this.groupid = groupid;
         this.title = title;
@@ -25,6 +26,7 @@ public class Task {
         this.assignMember = assignMember;
         this.priority = priority;
         this.done = false;
+        this.category = category;
     }
 
     public void setTaskid(String taskid) {
@@ -72,4 +74,8 @@ public class Task {
     }
 
     public boolean getDone() { return done; }
+
+    public Category getCategory() {
+        return category;
+    }
 }

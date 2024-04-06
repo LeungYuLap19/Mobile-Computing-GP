@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:background="@drawable/task_item_round_bg"
     android:paddingLeft="15dp">
 
@@ -52,7 +52,7 @@
         android:layout_height="match_parent"
         android:text="Username"
         android:textSize="18sp"
-        android:textColor="@color/text_small"
+        android:textColor="@color/text_regular"
         android:gravity="center"
         android:layout_marginRight="25dp"/>
 

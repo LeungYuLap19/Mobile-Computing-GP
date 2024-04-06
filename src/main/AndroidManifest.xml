@@ -4,7 +4,6 @@
 
     <application
         android:name=".states.AppStates"
-
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,7 +14,10 @@
         android:theme="@style/Theme.MobileComputingGP"
         tools:targetApi="31">
         <activity
-            android:name=".activities.AuthWelcomeActivity"
+            android:name=".activities.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,38 +25,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".activities.AuthWelcomeActivity"
+            android:exported="true" />
         <activity
             android:name=".activities.AuthLoginActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.AuthRegisterActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.MainGroupsActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.MainCreateGroupActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.MainUserProfileActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.MainGroupTasksActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.MainCreateTaskActivity"
             android:exported="true" />
-
-<!--        <activity-->
-<!--            android:name=".activities.MainActivity"-->
-<!--            android:exported="true" />-->
     </application>
 
 </manifest>

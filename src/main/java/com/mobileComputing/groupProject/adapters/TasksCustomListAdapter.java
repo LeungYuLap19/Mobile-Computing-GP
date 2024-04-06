@@ -134,7 +134,14 @@ public class TasksCustomListAdapter extends ArrayAdapter<Task> {
             viewHolder.finish_btn.setVisibility(View.INVISIBLE);
         }
 
-        viewHolder.category_color.setBackgroundColor(task.getCategory().getHexCode());
+        int color = task.getCategory().getHexCode(); // Replace with your actual method to get category color
+
+        LayerDrawable layerDrawable = (LayerDrawable) viewHolder.task_item.getBackground();
+        Drawable thirdItem = layerDrawable.getDrawable(2);
+
+        if (thirdItem instanceof GradientDrawable) {
+            ((GradientDrawable) thirdItem).setColor(color);
+        }
 
         return convertView;
     }

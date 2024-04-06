@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="APP NAME"
+                android:text="TaskMaster"
                 android:textSize="36dp"
                 android:textStyle="bold"
                 android:textColor="@color/text_highlight" />
@@ -48,9 +48,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Where household harmony meets effortless task
-                management for families and roommates alike!"
-                android:textSize="14dp"
+                android:text="Where household harmony meets effortless task management for families and roommates alike!"
+                android:textSize="16sp"
                 android:textColor="@color/text_small"
                 android:layout_weight="1"
                 android:layout_marginTop="20dp" />

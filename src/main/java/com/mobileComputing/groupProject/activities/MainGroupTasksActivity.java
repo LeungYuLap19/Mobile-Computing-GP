@@ -77,7 +77,6 @@ public class MainGroupTasksActivity extends AppCompatActivity {
         groups_profile_btn = findViewById(R.id.groups_profile_btn);
         task_date_list = findViewById(R.id.task_date_list);
         task_list = findViewById(R.id.task_list);
-        task_list.setDivider(null);
         group_name = findViewById(R.id.group_name);
         group_name.setText(appStates.getGroup().getGroupname());
         swipe_refresh_layout = findViewById(R.id.swipe_refresh_layout);

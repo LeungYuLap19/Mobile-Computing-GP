@@ -12,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.mobileComputing.groupProject.R;
 import com.mobileComputing.groupProject.models.User;
+import com.mobileComputing.groupProject.services.firebase.AuthService;
 import com.mobileComputing.groupProject.states.AppStates;
 
 public class MainUserProfileActivity extends AppCompatActivity {
 
+    AuthService authService;
     AppStates appStates;
     ImageButton return_btn;
     EditText username_et, email_et;
@@ -26,6 +28,7 @@ public class MainUserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_user_profile);
 
+        authService = new AuthService(MainUserProfileActivity.this);
         appStates = (AppStates) getApplication();
         return_btn = findViewById(R.id.return_btn);
         username_et = findViewById(R.id.username_et);
@@ -50,6 +53,7 @@ public class MainUserProfileActivity extends AppCompatActivity {
         logout_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                authService.storeValueInSharedPreferences(MainUserProfileActivity.this, null);
                 appStates.setUser(new User(null, null, null));
                 Intent intent = new Intent(MainUserProfileActivity.this, AuthWelcomeActivity.class);
                 startActivity(intent);

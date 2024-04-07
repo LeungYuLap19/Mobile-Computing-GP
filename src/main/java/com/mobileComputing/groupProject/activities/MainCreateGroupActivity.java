@@ -85,11 +85,17 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         create_group_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (appStates.getGroup() == null) {
-                    createGroup();
+                String groupName = group_name_et.getText().toString();
+                if (groupName.equals("")) {
+                    Toast.makeText(MainCreateGroupActivity.this, "Enter Group Name", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    modifyGroup();
+                    if (appStates.getGroup() == null) {
+                        createGroup();
+                    }
+                    else {
+                        modifyGroup();
+                    }
                 }
             }
         });

@@ -84,7 +84,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
             nameList[i + 2] = members.get(i).getUsername();
         }
         categoryList = new ArrayList<>();
-        categoryList.add(new Category("None", R.color.text_small));
+        categoryList.add(new Category("None", R.color.white));
         List<Category> existedCategories = currentGroup.getCategoryList();
         categoryList.addAll(existedCategories);
 
@@ -506,7 +506,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         if (!exist) {
             categoryList.add(new Category(categoryName, hexCode));
         }
-       categoryList.remove(0);
+        categoryList.remove(0);
         currentGroup.setCategoryList(categoryList);
     }
 

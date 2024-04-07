@@ -40,7 +40,22 @@ public class AuthRegisterActivity extends AppCompatActivity {
         register_signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerNewUser();
+                String username = register_username_et.getText().toString();
+                String email = register_email_et.getText().toString();
+                String password = register_password_et.getText().toString();
+
+                if (username.equals("")) {
+                    Toast.makeText(AuthRegisterActivity.this, "Enter username", Toast.LENGTH_SHORT).show();
+                }
+                else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(AuthRegisterActivity.this, "Enter a valid email", Toast.LENGTH_SHORT).show();
+                }
+                else if (password.equals("")) {
+                    Toast.makeText(AuthRegisterActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    registerNewUser();
+                }
             }
         });
 
@@ -63,6 +78,7 @@ public class AuthRegisterActivity extends AppCompatActivity {
             @Override
             public void onSuccess(User user) {
                 appStates.setUser(user);
+                firebaseAuthService.storeValueInSharedPreferences(AuthRegisterActivity.this, user.getUserid());
                 Intent intent = new Intent(AuthRegisterActivity.this, MainGroupsActivity.class);
                 startActivity(intent);
                 finish();

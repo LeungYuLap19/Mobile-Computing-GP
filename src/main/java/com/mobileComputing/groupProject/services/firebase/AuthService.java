@@ -1,6 +1,7 @@
 package com.mobileComputing.groupProject.services.firebase;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -146,6 +147,24 @@ public class AuthService {
                         }
                     }
                 });
+    }
+
+    public void storeValueInSharedPreferences(Context context, String value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("KEY_NAME", value);
+        editor.apply();
+    }
+
+    public String retrieveValueFromSharedPreferences(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
+        String value = sharedPreferences.getString("KEY_NAME", null);
+        if (value != null) {
+            return value;
+        } else {
+            // Value not found
+            return null;
+        }
     }
 
     private interface ExistingUserCallback {

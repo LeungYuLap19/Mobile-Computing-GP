@@ -62,6 +62,7 @@ public class AuthLoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(User user) {
                 appStates.setUser(user);
+                firebaseAuthService.storeValueInSharedPreferences(AuthLoginActivity.this, user.getUserid());
                 Intent intent = new Intent(AuthLoginActivity.this, MainGroupsActivity.class);
                 startActivity(intent);
                 finish();

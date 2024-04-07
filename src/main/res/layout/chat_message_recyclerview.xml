@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/edit_rounded_textbox"
-        android:backgroundTint="@color/background"
+        android:backgroundTint="@color/text_highlight"
         android:layout_alignParentEnd="true"
         android:padding="8dp"
         android:layout_marginStart="80dp"

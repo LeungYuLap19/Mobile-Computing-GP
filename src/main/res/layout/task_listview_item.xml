@@ -1,5 +1,12 @@
 <!-- custom_list_item.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shadow_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/shadow_task_bg">
+<LinearLayout
     android:id="@+id/task_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -63,4 +70,5 @@
         android:layout_marginTop="-10dp"
         android:layout_marginBottom="-10dp"/>
 
+</LinearLayout>
 </LinearLayout>

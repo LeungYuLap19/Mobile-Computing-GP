@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.firebase.GroupService;
 import com.mobileComputing.groupProject.services.firebase.UserService;
 import com.mobileComputing.groupProject.services.interfaces.AddGroupCallBack;
+import com.mobileComputing.groupProject.services.interfaces.AddTaskCallBack;
 import com.mobileComputing.groupProject.services.interfaces.UserSearchCallback;
 import com.mobileComputing.groupProject.states.AppStates;
 
@@ -38,6 +40,7 @@ public class MainCreateGroupActivity extends AppCompatActivity {
     EditText group_name_et, username_search_et;
     ListView members_lv, username_search_lv;
     MembersCustomListAdapter membersAdapter, searchResultAdapter;
+    Button delete_group_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         members_lv = findViewById(R.id.members_lv);
         username_search_lv = findViewById(R.id.username_search_lv);
         group_name = findViewById(R.id.group_name);
+        delete_group_btn = findViewById(R.id.delete_group_btn);
 
         membersAdapter = new MembersCustomListAdapter(this, existingUsers, existingUsers, searchResultUsers, false);
         searchResultAdapter = new MembersCustomListAdapter(this, searchResultUsers, existingUsers, searchResultUsers, true);
@@ -97,6 +101,13 @@ public class MainCreateGroupActivity extends AppCompatActivity {
                         modifyGroup();
                     }
                 }
+            }
+        });
+
+        delete_group_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteGroup();
             }
         });
 
@@ -190,6 +201,25 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         });
     }
 
+    private void deleteGroup() {
+        String groupName = appStates.getGroup().getGroupname();
+        groupService.deleteGroupById(appStates.getGroup().getGroupid(), new AddTaskCallBack() {
+            @Override
+            public void onSuccess() {
+                appStates.setGroup(null);
+                Toast.makeText(MainCreateGroupActivity.this, groupName + " deleted", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainCreateGroupActivity.this, MainGroupsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+    }
+
     private void checkCurrentGroup() {
         Group currentGroup = appStates.getGroup();
 
@@ -201,6 +231,13 @@ public class MainCreateGroupActivity extends AppCompatActivity {
             existingUsers.clear();
             for (User member : members) {
                 existingUsers.add(member);
+            }
+            for (User user : existingUsers) {
+                if (user.getUserid().equals(appStates.getUser().getUserid())) {
+                    if (user.getIsAdmin()) {
+                        delete_group_btn.setVisibility(View.VISIBLE);
+                    }
+                }
             }
         }
     }

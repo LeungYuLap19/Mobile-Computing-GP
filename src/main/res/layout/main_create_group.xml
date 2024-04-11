@@ -10,6 +10,7 @@
         android:paddingTop="30dp"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
+        android:paddingBottom="20dp"
         android:background="@color/background">
 
         <LinearLayout
@@ -64,7 +65,7 @@
         
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -76,6 +77,7 @@
                 android:layout_marginBottom="20dp"/>
 
             <LinearLayout
+                android:id="@+id/search_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/layout_register_btn_bg"
@@ -95,19 +97,37 @@
 
             </LinearLayout>
 
-            <ListView
-                android:id="@+id/members_lv"
-                android:visibility="visible"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"/>
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:layout_weight="1">
 
-            <ListView
-                android:id="@+id/username_search_lv"
-                android:visibility="gone"
+                <ListView
+                    android:id="@+id/members_lv"
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"/>
+
+                <ListView
+                    android:id="@+id/username_search_lv"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none" />
+
+            </LinearLayout>
+
+            <android.widget.Button
+                android:id="@+id/delete_group_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none" />
+                android:text="Delete Group"
+                android:background="@drawable/layout_register_btn_bg"
+                android:textAllCaps="false"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

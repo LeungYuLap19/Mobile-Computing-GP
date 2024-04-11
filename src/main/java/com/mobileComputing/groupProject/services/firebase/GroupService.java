@@ -222,4 +222,22 @@ public class GroupService {
             }
         });
     }
+
+    public void deleteGroupById(String groupId, AddTaskCallBack callback) {
+        DocumentReference groupRef = groupsCollection.document(groupId);
+
+        groupRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        callback.onSuccess();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.onFailure(e);
+                    }
+                });
+    }
 }

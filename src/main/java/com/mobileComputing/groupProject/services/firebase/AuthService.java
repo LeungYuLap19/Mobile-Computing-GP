@@ -15,7 +15,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.Token;
 import com.mobileComputing.groupProject.models.User;
+import com.mobileComputing.groupProject.services.firebaseMessaging.TokenManageService;
 import com.mobileComputing.groupProject.services.interfaces.AuthCallBack;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -57,6 +59,7 @@ public class AuthService {
                                     Log.d("firebaseMsg", "DocumentSnapshot added with ID: " + docID);
                                     User newUser = new User(docID, username, email);
                                     authCallBack.onSuccess(newUser);
+                                    TokenManageService.storeToken(docID);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -95,6 +98,7 @@ public class AuthService {
                                         User user = new User(docId, username, userEmail);
                                         Log.d("firebaseMsg", "Found user");
                                         authCallBack.onSuccess(user);
+                                        TokenManageService.storeToken(docId);
                                         return;
                                     }
                                 }

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.mobileComputing.groupProject.R;
 import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.firebase.AuthService;
+import com.mobileComputing.groupProject.services.firebaseMessaging.TokenManageService;
 import com.mobileComputing.groupProject.states.AppStates;
 
 public class MainUserProfileActivity extends AppCompatActivity {
@@ -53,6 +54,7 @@ public class MainUserProfileActivity extends AppCompatActivity {
         logout_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                TokenManageService.removeToken(user.getUserid());
                 authService.storeValueInSharedPreferences(MainUserProfileActivity.this, null);
                 appStates.setUser(new User(null, null, null));
                 Intent intent = new Intent(MainUserProfileActivity.this, AuthWelcomeActivity.class);

@@ -21,6 +21,7 @@ import com.mobileComputing.groupProject.models.Group;
 import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.firebase.GroupService;
 import com.mobileComputing.groupProject.services.firebase.UserService;
+import com.mobileComputing.groupProject.services.firebaseMessaging.MessageService;
 import com.mobileComputing.groupProject.services.interfaces.AddGroupCallBack;
 import com.mobileComputing.groupProject.services.interfaces.AddTaskCallBack;
 import com.mobileComputing.groupProject.services.interfaces.UserSearchCallback;
@@ -161,11 +162,20 @@ public class MainCreateGroupActivity extends AppCompatActivity {
 
     private void createGroup() {
         String groupName = group_name_et.getText().toString();
+        List<String> existingUserids = new ArrayList<>();
+
+        for (User user : existingUsers) {
+            existingUserids.add(user.getUserid());
+        }
+
+        existingUserids.remove(0);
 
         // Add the group to the Firestore collection using the GroupService
         groupService.addGroup(groupName, existingUsers, appStates.getUser().getUserid(), new AddGroupCallBack() {
             @Override
             public void onSuccess(String groupName) {
+                // test notification //
+                MessageService.sendMultipleMessages("Group notification", appStates.getUser().getUsername() + " added you to " + groupName, existingUserids);
                 Toast.makeText(MainCreateGroupActivity.this, groupName + " created", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainCreateGroupActivity.this, MainGroupsActivity.class);
                 startActivity(intent);

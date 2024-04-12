@@ -33,6 +33,7 @@ import com.mobileComputing.groupProject.models.Task;
 import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.firebase.GroupService;
 import com.mobileComputing.groupProject.services.firebase.TaskService;
+import com.mobileComputing.groupProject.services.firebaseMessaging.MessageService;
 import com.mobileComputing.groupProject.services.interfaces.AddTaskCallBack;
 import com.mobileComputing.groupProject.states.AppStates;
 
@@ -375,6 +376,28 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         taskService.addTask(task, new AddTaskCallBack() {
             @Override
             public void onSuccess() {
+                if (task.getAssignMember().equals("All")) {
+
+                    List<User> existingUsers = currentGroup.getMembers();
+                    List<String> existingUserids = new ArrayList<>();
+
+                    for (User user : existingUsers) {
+                        existingUserids.add(user.getUserid());
+                    }
+
+                    existingUserids.remove(0);
+
+                    MessageService.sendMultipleMessages("Task Notification", task.getTitle() + " assigned to you in " + currentGroup.getGroupname(), existingUserids);
+                }
+                else if (!task.getAssignMember().equals("None")) {
+                    List<User> existingUsers = currentGroup.getMembers();
+                    for (User user : existingUsers) {
+                        if (user.getUsername().equals(task.getAssignMember())) {
+                            MessageService.sendMessage("Task Notification", task.getTitle() + " assigned to you in " + currentGroup.getGroupname(), user.getUserid());
+                            break;
+                        }
+                    }
+                }
                 appStates.setTask(null);
                 Toast.makeText(MainCreateTaskActivity.this, "Task Created", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainCreateTaskActivity.this, MainGroupTasksActivity.class);

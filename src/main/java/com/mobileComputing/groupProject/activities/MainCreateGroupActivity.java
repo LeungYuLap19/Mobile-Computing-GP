@@ -197,6 +197,7 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         groupService.saveGroupById(group.getGroupid(), group, new AddGroupCallBack() {
             @Override
             public void onSuccess(String groupName) {
+                group.setCategoryList(appStates.getGroup().getCategoryList());
                 appStates.setGroup(group);
                 Toast.makeText(MainCreateGroupActivity.this, groupName + " saved", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainCreateGroupActivity.this, MainGroupTasksActivity.class);

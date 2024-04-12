@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class MessageService {
-    private static final String SERVER_URL = "http://localhost:3000/fcm-msg/";
+    private static final String SERVER_URL = "http://10.0.2.2:3000/fcm-msg/";
     private static final String SEND_MESSAGE = "send-message";
     private static final String SEND_MULTIPLE_MESSAGES = "send-multiple-messages";
 

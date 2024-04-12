@@ -10,11 +10,4 @@
               android:color="@color/text_regular"/>
       </shape>
   </item>
-
-    <item android:gravity="left" android:width="185dp">
-        <shape>
-            <solid android:color="@color/text_regular" />
-            <corners android:radius="25dp"/>
-        </shape>
-    </item>
 </layer-list>

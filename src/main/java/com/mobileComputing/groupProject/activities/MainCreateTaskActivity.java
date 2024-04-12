@@ -300,8 +300,6 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
             }
         });
 
-
-
         checkTaskDetail();
     }
 

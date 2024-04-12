@@ -41,13 +41,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
 
+        Log.d("Notification:", message.getNotification().getBody());
+
         // Check if message contains a notification payload.
         if (message.getNotification() != null) {
             // Handle notification payload.
             String title = message.getNotification().getTitle();
             String body = message.getNotification().getBody();
             sendNotification(title, body);
-            Log.d("NotificationBody", "Notification body: " + body);
         }
 
         // Check if message contains a data payload.
@@ -86,6 +87,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         notificationManager.notify(0, notificationBuilder.build());
     }
-
 
 }

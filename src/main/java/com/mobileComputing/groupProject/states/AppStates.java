@@ -20,7 +20,6 @@ public class AppStates extends Application {
         this.user = user;
     }
     public void setGroup(Group group) { this.group = group; }
-
     public void setTask(Task task) {
         this.task = task;
     }

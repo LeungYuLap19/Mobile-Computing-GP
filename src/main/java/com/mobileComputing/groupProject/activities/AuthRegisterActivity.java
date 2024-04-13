@@ -77,6 +77,7 @@ public class AuthRegisterActivity extends AppCompatActivity {
         firebaseAuthService.newUser(username, email, password, new AuthCallBack() {
             @Override
             public void onSuccess(User user) {
+                Toast.makeText(AuthRegisterActivity.this, "Register success", Toast.LENGTH_SHORT).show();
                 appStates.setUser(user);
                 firebaseAuthService.storeValueInSharedPreferences(AuthRegisterActivity.this, user.getUserid());
                 Intent intent = new Intent(AuthRegisterActivity.this, MainGroupsActivity.class);

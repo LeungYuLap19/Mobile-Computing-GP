@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.button.MaterialButton;
 import com.mobileComputing.groupProject.R;
 import com.mobileComputing.groupProject.adapters.TasksCustomListAdapter;
+import com.mobileComputing.groupProject.models.Category;
 import com.mobileComputing.groupProject.models.Task;
 import com.mobileComputing.groupProject.services.firebase.TaskService;
 import com.mobileComputing.groupProject.services.interfaces.GetTasksCallBack;

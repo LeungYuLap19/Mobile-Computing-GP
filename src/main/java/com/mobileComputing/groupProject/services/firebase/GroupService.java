@@ -99,25 +99,34 @@ public class GroupService {
 
                                 if (memberid.equals(userid)) {
                                     Group group = new Group(document.getId(), groupname, members);
+                                    if (categoryList != null) {
+                                        // Log.d("DebugCat", groupname + " categorylist not null");
+                                        for (Map<String, Object> categoryMap : categoryList) {
+                                            String categoryName = (String) categoryMap.get("categoryName");
+                                            long hexCodeLong = (long) categoryMap.get("hexCode");
+                                            int hexCode = (int) hexCodeLong;
+                                            Category category = new Category(categoryName, hexCode);
+                                            categories.add(category);
+                                        }
+                                    }
+                                    group.setCategoryList(categories);
                                     groups.add(group);
 
                                 }
                             }
 
-                            if (categoryList != null) {
-                                for (Map<String, Object> categoryMap : categoryList) {
-                                    String categoryName = (String) categoryMap.get("categoryName");
-                                    long hexCodeLong = (long) categoryMap.get("hexCode");
-                                    int hexCode = (int) hexCodeLong;
-                                    Category category = new Category(categoryName, hexCode);
-                                    categories.add(category);
-                                }
-                            }
-
                             // Set category list for the group
-                            if (!groups.isEmpty()) {
-                                Group lastGroup = groups.get(groups.size() - 1);
-                                lastGroup.setCategoryList(categories);
+//                            if (!groups.isEmpty()) {
+//                                Group lastGroup = groups.get(groups.size() - 1);
+//                                lastGroup.setCategoryList(categories);
+//                            }
+                        }
+
+                        for (Group group : groups) {
+                            Log.d("DebugCat", group.getGroupname());
+                            List<Category> catList = group.getCategoryList();
+                            for (Category category : catList) {
+                                Log.d("DebugCat", "   " + category.getCategoryName());
                             }
                         }
                         callBack.onSuccess(groups);

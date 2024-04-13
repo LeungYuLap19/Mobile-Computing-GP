@@ -2,6 +2,7 @@
 
     import android.content.Context;
     import android.content.Intent;
+    import android.util.Log;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
@@ -11,6 +12,7 @@
 
     import com.mobileComputing.groupProject.R;
     import com.mobileComputing.groupProject.activities.MainGroupTasksActivity;
+    import com.mobileComputing.groupProject.models.Category;
     import com.mobileComputing.groupProject.models.Group;
     import com.mobileComputing.groupProject.models.Task;
     import com.mobileComputing.groupProject.services.firebase.TaskService;

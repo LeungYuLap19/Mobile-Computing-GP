@@ -16,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.button.MaterialButton;
 import com.mobileComputing.groupProject.R;
 import com.mobileComputing.groupProject.adapters.GroupsCustomListAdapter;
+import com.mobileComputing.groupProject.models.Category;
 import com.mobileComputing.groupProject.models.Group;
 import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.firebase.GroupService;

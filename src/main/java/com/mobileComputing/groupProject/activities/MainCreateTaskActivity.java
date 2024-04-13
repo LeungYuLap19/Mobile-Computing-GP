@@ -4,12 +4,9 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -33,7 +30,6 @@ import com.mobileComputing.groupProject.models.Task;
 import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.firebase.GroupService;
 import com.mobileComputing.groupProject.services.firebase.TaskService;
-import com.mobileComputing.groupProject.services.firebaseMessaging.MessageService;
 import com.mobileComputing.groupProject.services.interfaces.AddTaskCallBack;
 import com.mobileComputing.groupProject.states.AppStates;
 
@@ -57,14 +53,17 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
     DatePicker date_picker;
     TimePicker time_picker;
     Button delete_task_btn;
-
-    String nameList[];
-    final String priorityList[] = {"None", "Low", "Medium", "High"};
-    List<Category> categoryList;
     GridLayout color_grid;
     View color_block, select_color;
     Button save_category_btn;
     EditText category_name;
+
+    // lists for spinners
+    String nameList[];
+    final String priorityList[] = {"None", "Low", "Medium", "High"};
+    List<Category> categoryList;
+
+    //----
     Boolean color_selected;
     Boolean switchCategory = false;
 
@@ -77,6 +76,8 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         taskService = new TaskService();
         appStates = (AppStates) getApplication();
         currentGroup = appStates.getGroup();
+
+        // get members from current group append them into member list
         List<User> members = currentGroup.getMembers();
         nameList = new String[members.size() + 2];
         nameList[0] = "None";
@@ -84,6 +85,8 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         for (int i = 0; i < members.size(); i++) {
             nameList[i + 2] = members.get(i).getUsername();
         }
+
+        // init category list
         categoryList = new ArrayList<>();
         categoryList.add(new Category("None", R.color.white));
         List<Category> existedCategories = currentGroup.getCategoryList();
@@ -123,6 +126,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         members_spinner.setAdapter(members_adapter);
         priority_spinner.setAdapter(priority_adapter);
 
+        // init color panel for category customization
         color_selected = false;
         int[] colorIds = {
                 R.color.colorPicker1, R.color.colorPicker2, R.color.colorPicker3, R.color.colorPicker4,
@@ -158,6 +162,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
             color_grid.addView(colorBlock);
         }
 
+        // switch between existed category window and new category window
         switch_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,6 +190,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
             }
         });
 
+        // create btn with action create
         create_task_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,6 +198,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
             }
         });
 
+        // show popup windows
         select_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,6 +226,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
             }
         });
 
+        // close popup windows and set date time category
         date_picker_bg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -267,6 +275,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
             }
         });
 
+        // set category with existed categories or new categories
         save_category_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -308,6 +317,8 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         return Math.round(dp * density);
     }
 
+    // actions create if current task not exist
+    // action modify if current task exist
     private void taskActions(String action) {
         String title = title_et.getText().toString();
         String notes = notes_et.getText().toString();
@@ -374,28 +385,28 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         taskService.addTask(task, new AddTaskCallBack() {
             @Override
             public void onSuccess() {
-                if (task.getAssignMember().equals("All")) {
-
-                    List<User> existingUsers = currentGroup.getMembers();
-                    List<String> existingUserids = new ArrayList<>();
-
-                    for (User user : existingUsers) {
-                        existingUserids.add(user.getUserid());
-                    }
-
-                    existingUserids.remove(0);
-
-                    MessageService.sendMultipleMessages("Task Notification", task.getTitle() + " assigned to you in " + currentGroup.getGroupname(), existingUserids);
-                }
-                else if (!task.getAssignMember().equals("None")) {
-                    List<User> existingUsers = currentGroup.getMembers();
-                    for (User user : existingUsers) {
-                        if (user.getUsername().equals(task.getAssignMember())) {
-                            MessageService.sendMessage("Task Notification", task.getTitle() + " assigned to you in " + currentGroup.getGroupname(), user.getUserid());
-                            break;
-                        }
-                    }
-                }
+//                if (task.getAssignMember().equals("All")) {
+//
+//                    List<User> existingUsers = currentGroup.getMembers();
+//                    List<String> existingUserids = new ArrayList<>();
+//
+//                    for (User user : existingUsers) {
+//                        existingUserids.add(user.getUserid());
+//                    }
+//
+//                    existingUserids.remove(0);
+//
+//                    MessageService.sendMultipleMessages("Task Notification", task.getTitle() + " assigned to you in " + currentGroup.getGroupname(), existingUserids);
+//                }
+//                else if (!task.getAssignMember().equals("None")) {
+//                    List<User> existingUsers = currentGroup.getMembers();
+//                    for (User user : existingUsers) {
+//                        if (user.getUsername().equals(task.getAssignMember())) {
+//                            MessageService.sendMessage("Task Notification", task.getTitle() + " assigned to you in " + currentGroup.getGroupname(), user.getUserid());
+//                            break;
+//                        }
+//                    }
+//                }
                 appStates.setTask(null);
                 Toast.makeText(MainCreateTaskActivity.this, "Task Created", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainCreateTaskActivity.this, MainGroupTasksActivity.class);
@@ -428,6 +439,8 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         });
     }
 
+    // check current task exist in appstates
+    // set page as task info page if exist
     private void checkTaskDetail() {
         Task task = appStates.getTask();
 
@@ -514,6 +527,7 @@ public class MainCreateTaskActivity  extends AppCompatActivity {
         });
     }
 
+    // save category to appstate current group when create/save task
     private void saveCategoryToCurrentGroup(String categoryName, int hexCode) {
         boolean exist = false;
         for (Category category : categoryList) {

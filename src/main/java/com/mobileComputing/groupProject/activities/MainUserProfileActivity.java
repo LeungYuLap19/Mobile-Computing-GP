@@ -1,27 +1,18 @@
 package com.mobileComputing.groupProject.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import com.mobileComputing.groupProject.R;
 import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.firebase.AuthService;
-import com.mobileComputing.groupProject.services.firebaseMessaging.TokenManageService;
 import com.mobileComputing.groupProject.states.AppStates;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class MainUserProfileActivity extends AppCompatActivity {
 
@@ -63,7 +54,7 @@ public class MainUserProfileActivity extends AppCompatActivity {
         logout_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TokenManageService.removeToken(user.getUserid());
+//                TokenManageService.removeToken(user.getUserid());
                 authService.storeValueInSharedPreferences(MainUserProfileActivity.this, null);
                 appStates.setUser(new User(null, null, null));
                 Intent intent = new Intent(MainUserProfileActivity.this, AuthWelcomeActivity.class);
@@ -86,5 +77,5 @@ public class MainUserProfileActivity extends AppCompatActivity {
             }});
 
 
-    };}
+    }}
 

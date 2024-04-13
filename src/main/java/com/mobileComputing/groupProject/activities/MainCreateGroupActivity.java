@@ -21,7 +21,6 @@ import com.mobileComputing.groupProject.models.Group;
 import com.mobileComputing.groupProject.models.User;
 import com.mobileComputing.groupProject.services.firebase.GroupService;
 import com.mobileComputing.groupProject.services.firebase.UserService;
-import com.mobileComputing.groupProject.services.firebaseMessaging.MessageService;
 import com.mobileComputing.groupProject.services.interfaces.AddGroupCallBack;
 import com.mobileComputing.groupProject.services.interfaces.AddTaskCallBack;
 import com.mobileComputing.groupProject.services.interfaces.UserSearchCallback;
@@ -64,6 +63,7 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         group_name = findViewById(R.id.group_name);
         delete_group_btn = findViewById(R.id.delete_group_btn);
 
+        // use 2 listviews for displaying members added and search user results
         membersAdapter = new MembersCustomListAdapter(this, existingUsers, existingUsers, searchResultUsers, false);
         searchResultAdapter = new MembersCustomListAdapter(this, searchResultUsers, existingUsers, searchResultUsers, true);
         members_lv.setAdapter(membersAdapter);
@@ -74,11 +74,17 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         return_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // if no group in appstate
+                // means this is a create group page
+                // return to home page
                 if (appStates.getGroup() == null) {
                     Intent intent = new Intent(MainCreateGroupActivity.this, MainGroupsActivity.class);
                     startActivity(intent);
                     finish();
                 }
+                // if group in appstates
+                // group info page
+                // back to group page
                 else {
                     Intent intent = new Intent(MainCreateGroupActivity.this, MainGroupTasksActivity.class);
                     startActivity(intent);
@@ -95,9 +101,11 @@ public class MainCreateGroupActivity extends AppCompatActivity {
                     Toast.makeText(MainCreateGroupActivity.this, "Enter Group Name", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    // if not current group exist create new group
                     if (appStates.getGroup() == null) {
                         createGroup();
                     }
+                    // if current group exist save changes of current group
                     else {
                         modifyGroup();
                     }
@@ -105,6 +113,7 @@ public class MainCreateGroupActivity extends AppCompatActivity {
             }
         });
 
+        // only current user is admin and current group exist in appstate
         delete_group_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,6 +147,7 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         checkCurrentGroup();
     }
 
+    // use search text to search user
     private void searchUsers(String searchText) {
         userService.searchUsersByKeyword(searchText, new UserSearchCallback() {
             @Override
@@ -162,20 +172,20 @@ public class MainCreateGroupActivity extends AppCompatActivity {
 
     private void createGroup() {
         String groupName = group_name_et.getText().toString();
-        List<String> existingUserids = new ArrayList<>();
-
-        for (User user : existingUsers) {
-            existingUserids.add(user.getUserid());
-        }
-
-        existingUserids.remove(0);
+//        List<String> existingUserids = new ArrayList<>();
+//
+//        for (User user : existingUsers) {
+//            existingUserids.add(user.getUserid());
+//        }
+//
+//        existingUserids.remove(0);
 
         // Add the group to the Firestore collection using the GroupService
         groupService.addGroup(groupName, existingUsers, appStates.getUser().getUserid(), new AddGroupCallBack() {
             @Override
             public void onSuccess(String groupName) {
                 // test notification //
-                MessageService.sendMultipleMessages("Group notification", appStates.getUser().getUsername() + " added you to " + groupName, existingUserids);
+//                MessageService.sendMultipleMessages("Group notification", appStates.getUser().getUsername() + " added you to " + groupName, existingUserids);
                 Toast.makeText(MainCreateGroupActivity.this, groupName + " created", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainCreateGroupActivity.this, MainGroupsActivity.class);
                 startActivity(intent);
@@ -231,6 +241,8 @@ public class MainCreateGroupActivity extends AppCompatActivity {
         });
     }
 
+    // This function is for checking if current group in appstates
+    // if yes set this page to display group info
     private void checkCurrentGroup() {
         Group currentGroup = appStates.getGroup();
 
